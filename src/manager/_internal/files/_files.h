@@ -1,90 +1,70 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reader.h                                           :+:      :+:    :+:   */
+/*   _files.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/10 15:21:10 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/10 19:32:51 by nduvoid          ###   ########.fr       */
+/*   Created: 2025/05/03 12:19:03 by nduvoid           #+#    #+#             */
+/*   Updated: 2025/06/05 14:32:43 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READER_H
-# define READER_H
+#ifndef _FILES_H
+# define _FILES_H
 
 # pragma once
 
 /* ************************************************************************** */
-/*                                 Headers                                    */
+/*                                  Headers                                   */
 /* ************************************************************************** */
 
-/* -----| Systems   |----- */
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <fcntl.h>
-# include <unistd.h>
+/* -----| Systemes |----- */
+# include "allowed.h"
 
-/* -----| Globals   |----- */
+/* -----| Globals  |----- */
 # include "config.h"
 
-/* -----| Internals |----- */
-	//...
-
 /* -----| Modules  |----- */
-# include "mmanager.h"
+//...
 
 /* ************************************************************************** */
-/*                                 Typedefs                                   */
+/*                                  Defines                                   */
 /* ************************************************************************** */
 
-typedef enum e_extension	t_extension;
-
-typedef struct s_file		t_file;
-typedef struct s_data		t_data;
+# define FDM_MAX_FD	1024	/* number of file descriptors managed */
 
 /* ************************************************************************** */
-/*                                 Enums                                      */
+/*                                  Typedefs                                  */
 /* ************************************************************************** */
 
-enum e_extension
+typedef enum e_fd_access	t_fd_access;	/* fd access requests */
+
+/* ************************************************************************** */
+/*                                  Enums                                     */
+/* ************************************************************************** */
+
+enum e_fd_access
 {
-	EXT_NO_FILE,
-	EXT_PNG,
-	EXT_JPEG,
-	EXT_BMP,
-	EXT_UNKNOWN
+	fd_add,			/* request to add a file descriptor to the manager        */
+	fd_rm,			/* request to remove a file descriptor from the manager  */
+	fd_close_all,	/* request to close all file descriptors in the manager */
+	fd_is_open,		/* request to check if a file descriptor is open       */
 };
 
 /* ************************************************************************** */
-/*                                 Struct                                     */
-/* ************************************************************************** */
-
-struct s_file
-{
-	t_extension				type;
-	union
-	{
-		struct s_bmp		bmp;
-		struct s_jpeg		jpeg;
-	}						data;
-	char					*filename;
-};
-
-struct s_data
-{
-	t_file	**files;
-	size_t	count;
-	size_t	nb_png;
-	size_t	nb_jpeg;
-	size_t	nb_bmp;
-};
-
-/* ************************************************************************** */
-/*                                 Prototypes                                 */
+/*                                  Structs                                   */
 /* ************************************************************************** */
 
 //...
 
-#endif /* READER_H */
+/* ************************************************************************** */
+/*                                  Prototypes                                */
+/* ************************************************************************** */
+
+int	_fdm_store(
+		const int fd,
+		const t_fd_access access
+		);
+
+#endif /* _FILES_H */

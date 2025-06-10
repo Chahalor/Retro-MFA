@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reader.h                                           :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:21:10 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/10 19:32:51 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/10 19:36:34 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READER_H
-# define READER_H
+#ifndef UTILS_H
+# define UTILS_H
 
 # pragma once
 
@@ -35,56 +35,14 @@
 /* -----| Modules  |----- */
 # include "mmanager.h"
 
-/* ************************************************************************** */
-/*                                 Typedefs                                   */
-/* ************************************************************************** */
-
-typedef enum e_extension	t_extension;
-
-typedef struct s_file		t_file;
-typedef struct s_data		t_data;
-
-/* ************************************************************************** */
-/*                                 Enums                                      */
-/* ************************************************************************** */
-
-enum e_extension
-{
-	EXT_NO_FILE,
-	EXT_PNG,
-	EXT_JPEG,
-	EXT_BMP,
-	EXT_UNKNOWN
-};
-
-/* ************************************************************************** */
-/*                                 Struct                                     */
-/* ************************************************************************** */
-
-struct s_file
-{
-	t_extension				type;
-	union
-	{
-		struct s_bmp		bmp;
-		struct s_jpeg		jpeg;
-	}						data;
-	char					*filename;
-};
-
-struct s_data
-{
-	t_file	**files;
-	size_t	count;
-	size_t	nb_png;
-	size_t	nb_jpeg;
-	size_t	nb_bmp;
-};
 
 /* ************************************************************************** */
 /*                                 Prototypes                                 */
 /* ************************************************************************** */
 
-//...
+void	*memdup(
+	const void *const restrict src,
+	size_t size
+);
 
-#endif /* READER_H */
+#endif /* UTILS_H */
