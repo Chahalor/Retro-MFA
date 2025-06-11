@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:21:10 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/11 11:26:58 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 16:50:03 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <string.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <stdint.h>
 
 /* -----| Globals   |----- */
 # include "config.h"
@@ -41,11 +42,10 @@
 
 typedef enum e_extension	t_extension;
 
-typedef struct s_file		t_file;
+typedef struct s_image		t_image;
 typedef struct s_data		t_data;
 
-typedef struct s_bmp	t_bmp;
-typedef struct s_jpeg	t_jpeg;
+typedef struct s_bmp_header	t_bmp_header;
 
 /* ************************************************************************** */
 /*                                 Enums                                      */
@@ -62,36 +62,20 @@ enum e_extension
 /*                                 Struct                                     */
 /* ************************************************************************** */
 
-struct s_bmp_header
+#pragma pack(push, 1)
+struct s_image
 {
-	unsigned char	bfType[2];		// "BM"
-	unsigned int	bfSize;			// Size of the file in bytes
-	unsigned short	bfReserved1;	// Reserved, must be 0
-	unsigned short	bfReserved2;	// Reserved, must be 0
-	unsigned int	bfOffBits;		// Offset to the pixel data
+	uint16_t	width;
+	uint16_t	height;
+	size_t		nb_pixels;
+	uint8_t		*pixels;	// data in rgb (3 oct per pixel)
 };
-
-struct s_bmp
-{
-	struct s_bmp_header		header;
-	void					*data;
-	size_t					size;
-};
-
-struct s_file
-{
-	t_extension		type;
-	t_bmp			data;
-	char			*filename;
-};
+#pragma pack(pop)
 
 struct s_data
 {
-	t_file	**files;
-	size_t	count;
-	size_t	nb_png;
-	size_t	nb_jpeg;
-	size_t	nb_bmp;
+	t_image	files[MAX_HANDLED_IMAGE];
+	size_t	nb_files;
 };
 
 /* ************************************************************************** */
