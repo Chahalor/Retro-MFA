@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   _write.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:44:25 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/11 09:22:17 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 11:34:54 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,31 @@
 	//...
 
 /* -----| Internals |----- */
-	//...
+#include "_reader.h"
 
 /* -----| Modules   |----- */
-#include "utils.h"
+#include "reader.h"
 
 #pragma endregion Header
 #pragma region Fonctions
 
-/** */
-__attribute__((always_inline, used, malloc)) inline void	*memdup(
-	const void *const restrict src,
-	size_t size
+int	_write_file(
+	void *const restrict data,
+	t_extension type
 )
 {
-	char							*dup;
-	const char *const	restrict	_src = (const char *)src;
-	register size_t					i;
+	const char	*filename = "tkt.bmp";
+	const int	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	const t_file	*file = (t_file *)data;
+	
+	(void)type; // Suppress unused parameter warning
+	if (unlikely(fd < 0))
+		return (perror("Error opening file for writing"), -1);
 
-	dup = (char *)mm_alloc(size);
-	if (unlikely(!dup))
-		return (NULL);
-	i = -1;
-	while (++i < size)
-		dup[i] = _src[i];
-	return ((void *)dup);
+	write(fd, &file->data.header, sizeof(file->data.header));
+	write(fd, file->data.data, file->data.size);
+	close(fd);
+	return (0);
 }
 
 #pragma endregion Fonctions

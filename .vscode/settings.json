@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"mmanager.h": "c"
+		"mmanager.h": "c",
+		"reader.h": "c"
 	}
 }

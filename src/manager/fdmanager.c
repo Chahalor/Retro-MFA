@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:57 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/05/29 11:06:29 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 08:45:07 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ __attribute__(()) int	fdm_open(
 {
 	const int	fd = open(path, flags, mode);
 
-	if (_UNLIKELY(fd < 0))
+	if (unlikely(fd < 0))
 		return (-1);
 	else if (_fdm_store(fd, fd_add) < 0)
 	{
@@ -72,7 +72,7 @@ int	fdm_close(
 	const int fd
 )
 {
-	if (_UNLIKELY(fd < 0))
+	if (unlikely(fd < 0))
 		return (-1);
 	if (_fdm_store(fd, fd_rm) < 0)
 		return (-2);
@@ -111,7 +111,7 @@ int	fdm_register(
 	const int fd
 )
 {
-	if (_UNLIKELY(fd < 0))
+	if (unlikely(fd < 0))
 		return (-1);
 	if (_fdm_store(fd, fd_add) < 0)
 		return (-2);
@@ -134,7 +134,7 @@ int	fdm_is_open(
 	const int fd
 )
 {
-	if (_UNLIKELY(fd < 0))
+	if (unlikely(fd < 0))
 		return (0);
 	else
 		return (_fdm_store(fd, fd_is_open));

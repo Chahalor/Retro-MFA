@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:21:10 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/10 19:32:51 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 11:26:58 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include "config.h"
 
 /* -----| Internals |----- */
-	//...
+# include "_internal/_reader.h"
 
 /* -----| Modules  |----- */
 # include "mmanager.h"
@@ -44,6 +44,9 @@ typedef enum e_extension	t_extension;
 typedef struct s_file		t_file;
 typedef struct s_data		t_data;
 
+typedef struct s_bmp	t_bmp;
+typedef struct s_jpeg	t_jpeg;
+
 /* ************************************************************************** */
 /*                                 Enums                                      */
 /* ************************************************************************** */
@@ -51,8 +54,6 @@ typedef struct s_data		t_data;
 enum e_extension
 {
 	EXT_NO_FILE,
-	EXT_PNG,
-	EXT_JPEG,
 	EXT_BMP,
 	EXT_UNKNOWN
 };
@@ -61,15 +62,27 @@ enum e_extension
 /*                                 Struct                                     */
 /* ************************************************************************** */
 
+struct s_bmp_header
+{
+	unsigned char	bfType[2];		// "BM"
+	unsigned int	bfSize;			// Size of the file in bytes
+	unsigned short	bfReserved1;	// Reserved, must be 0
+	unsigned short	bfReserved2;	// Reserved, must be 0
+	unsigned int	bfOffBits;		// Offset to the pixel data
+};
+
+struct s_bmp
+{
+	struct s_bmp_header		header;
+	void					*data;
+	size_t					size;
+};
+
 struct s_file
 {
-	t_extension				type;
-	union
-	{
-		struct s_bmp		bmp;
-		struct s_jpeg		jpeg;
-	}						data;
-	char					*filename;
+	t_extension		type;
+	t_bmp			data;
+	char			*filename;
 };
 
 struct s_data
@@ -85,6 +98,13 @@ struct s_data
 /*                                 Prototypes                                 */
 /* ************************************************************************** */
 
-//...
+t_data	*reader(
+	const char *const restrict filename
+);
+
+int		write_file(
+	void *const restrict data,
+	t_extension type
+);
 
 #endif /* READER_H */

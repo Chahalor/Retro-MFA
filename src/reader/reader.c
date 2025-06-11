@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:44:25 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/10 19:24:16 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 11:38:57 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 	//...
 
 /* -----| Internals |----- */
-	//...
+#include "_reader.h"
 
 /* -----| Modules   |----- */
 #include "reader.h"
@@ -56,25 +56,27 @@ static inline int	read_files(
 )
 {
 	const int	fd = open(filename, O_RDONLY);
-	char		buffer[sizeof(PNG_SIGNATURE) - 1];
+	char		buffer[sizeof(BMP_SIGNATURE) - 1] = {0};
 	int			bytes_read = -1;
 	size_t		i = 0;
 
 	if (unlikely(fd < 0))
 		return (perror("reader: read_file(): Error opening file"), -1);
-	data->files = (t_file **)mm_alloc(data->count, sizeof(t_file *));
+	data->files = (t_file **)mm_alloc(data->count * sizeof(t_file *));
 	if (unlikely(!data->files))
 		return (perror("reader: read_file(): Memory allocation failed"), close(fd), -2);
 	while (i < data->count && (bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
 	{
-		if (memcmp(buffer, PNG_SIGNATURE, sizeof(PNG_SIGNATURE) - 1) == 0)
-			data->files[i] = _read_png(fd);
-		else if (memcmp(buffer, JPEG_SIGNATURE, sizeof(JPEG_SIGNATURE) - 1) == 0)
-			data->files[i] = _read_jpeg(fd);
-		else if (memcmp(buffer, BMP_SIGNATURE, sizeof(BMP_SIGNATURE) - 1) == 0)
-			data->files[i] = _read_bmp(fd);
-		++i;
+		if (memcmp(buffer, BMP_SIGNATURE, sizeof(buffer)) == 0)
+		{
+			lseek(fd, -(off_t)sizeof(buffer), SEEK_CUR);
+			data->files[i++] = read_bmp(fd);
+			printf("BMP file found, index: %zu (%p)\n", i - 1, data->files[i - 1]);
+			break ;
+		}
 	}
+	close(fd);
+	return (bytes_read < 0 ? perror("reader: read_file(): Error reading file"), -3 : 0);
 }
 
 t_data	*reader(
@@ -83,7 +85,7 @@ t_data	*reader(
 {
 	t_data	*data = NULL;
 
-	data = (t_data *)mm_alloc(1, sizeof(t_data));
+	data = (t_data *)mm_alloc(sizeof(t_data));
 	if (unlikely(!data))
 		return (perror("reader(): Memory allocation failed"), NULL);
 	else if (count_files(filename, data) < 0)
@@ -94,6 +96,14 @@ t_data	*reader(
 		return (perror("reader(): Failed to read files"), mm_free(data), NULL);
 	else
 		return (data);
+}
+
+int	write_file(
+	void *const restrict data,
+	t_extension type
+)
+{
+	return (_write_file(data, type));
 }
 
 #pragma endregion Fonctions

@@ -1,0 +1,13 @@
+DIR_MODULE_CORE		:= core
+DIR_INTERFACE_CORE	:= $(DIR_MODULE_CORE)
+DIR_INTERNAL_CORE	:= $(DIR_MODULE_CORE)/_internal
+
+SRC_INTERFACE_CORE	:= 
+SRC_INTERNAL_CORE	:= 
+
+OBJ_CORE			:= $(addprefix $(DIR_OBJ)/$(DIR_INTERFACE_CORE)/, $(SRC_INTERFACE_CORE:.c=.o))
+OBJ_CORE			+= $(addprefix $(DIR_OBJ)/$(DIR_INTERNAL_CORE)/, $(SRC_INTERNAL_CORE:.c=.o))
+
+$(DIR_OBJ)/$(DIR_MODULE_CORE)/%.o: $(DIR_SRC)/$(DIR_MODULE_CORE)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(DEBUGFLAGS) $(INCLUDE_ALL) -I$(DIR_SRC)/$(DIR_MODULE_CORE)/_internal -c $< -o $@
