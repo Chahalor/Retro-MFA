@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:44:25 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/11 09:38:42 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/11 23:59:36 by bcheronn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@
 
 static inline void	show_usage(void)
 {
-	printf(BLUE "Usage" RESET ": ./program [options] [filename]\n");
+	printf(BLUE "Usage" RESET ": retromfa {-h | --help | filename}\n");
 }
 
 __attribute__((noreturn)) static inline void	show_help(void)
 {
 	show_usage();
 	printf(
-		BLUE "Options:\n"
+		BLUE "Arguments:\n"
 		RESET
 		"  -h, --help\t\tShow this help message\n"
-		"  [filename]\t\tSpecify the file to process\n"
+		"  filename\t\tSpecify the file to process\n"
 		BLUE "Examples:\n"
 		RESET
 		"  ./program -h\n"
@@ -56,7 +56,7 @@ static inline int	parse_short_args(
 	t_args *const restrict result
 )
 {
-	if (strncmp(args, "-h", 2))
+	if (strncmp(args, "-h", 3) == 0)
 		result->help = 1;
 	else
 		result->error = 1;
@@ -68,7 +68,7 @@ static inline int	parse_long_args(
 	t_args *const restrict result
 )
 {
-	if (strncmp(args, "--help", 6) == 0)
+	if (strncmp(args, "--help", 7) == 0)
 		result->help = 1;
 	else
 		result->error = 1;
@@ -84,8 +84,7 @@ t_args	args_parser(
 	t_args			result = {0};
 	register int	i = 1;
 
-
-	if (argc < 2)
+	if (argc != 2)
 	{
 		result.error = 1;
 		show_usage();
@@ -96,15 +95,15 @@ t_args	args_parser(
 		if (argv[i][0] == '-')
 		{
 			if (argv[i][1] == '-')
-				i += parse_long_args(argv[i] + 2, &result);
+				i += parse_long_args(argv[i], &result);
 			else
-				i += parse_short_args(argv[i] + 1, &result);
+				i += parse_short_args(argv[i], &result);
 		}
 		else
-			result.filename = (char *)argv[i];
+			result.filename = (char *)argv[i]; // Check for the four characters ".mfa" at the end of the filename
 	}
 	if (result.error)
-		show_usage();
+		show_usage(); // Should not show usage when an error occurs
 	else if (result.help)
 		show_help();
 	return (result);
