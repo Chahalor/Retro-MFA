@@ -58,3 +58,7 @@ MFA/
 .idea/
 # Visual Studio Code
 .vscode/
+
+# Binary files
+Retro-MFA
+retromfa
