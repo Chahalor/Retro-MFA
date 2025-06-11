@@ -12,7 +12,7 @@
 *.map
 *.exp
 
-# Precompiled Headers
+# Precompiled Headers	
 *.gch
 *.pch
 
@@ -27,6 +27,7 @@
 *.so
 *.so.*
 *.dylib
+*.bmp
 
 # Executables
 *.exe
@@ -50,3 +51,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+MFA/
