@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:20:28 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/11 17:00:33 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/12 09:43:34 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 /*                                 Configs                                    */
 /* ************************************************************************** */
 
-# define IMAGE_SIGNATURE 0x0610
+# define IMAGE_SIGNATURE {0x06, 0x10, 0x00, 0x00}
 
 # define unlikely(x) __builtin_expect(!!(x), 0)
 # define likely(x)   __builtin_expect(!!(x), 1)

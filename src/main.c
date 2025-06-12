@@ -6,7 +6,7 @@
 /*   By: nduvoid <nduvoid@student.42mulhouse.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:44:25 by nduvoid           #+#    #+#             */
-/*   Updated: 2025/06/11 17:00:27 by nduvoid          ###   ########.fr       */
+/*   Updated: 2025/06/12 09:45:52 by nduvoid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,15 @@ static inline t_image	read_next_image(
 	int *const end
 )
 {
+	const uint8_t	signature[] = IMAGE_SIGNATURE;
 	t_image	result;
-	char	buffer[2];
+	char	buffer[sizeof(signature)];
 	int read_bytes;
 
-	while ((read_bytes = read(fd, buffer, sizeof(buffer))) > 2)
+	while ((read_bytes = read(fd, buffer, sizeof(buffer))) > (int)sizeof(buffer))
 	{
-		if (buffer[0] == 0x06 && buffer[1] == 0x10)
+		if (memcmp(buffer, signature, sizeof(signature)) == 0)
+			break ;
 		{
 			lseek(fd, -6, SEEK_CUR);
 			break ;
